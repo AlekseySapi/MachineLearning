@@ -33,8 +33,11 @@ y = df['Price']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
-# Создаем и обучаем модель дерева решений
-model_rf = RandomForestRegressor()
+# Создаем и обучаем модель - Случайный лес
+model_rf = RandomForestRegressor(n_estimators=100, max_depth=10, random_state=42)
+# min_samples_split (минимальное количество образцов для разделения) - 2-10
+# min_samples_leaf (минимальное количество данных в листовом узле) - 1-5
+
 model_rf.fit(X_train, y_train)
 
 # Делаем предсказание на тестовой выборке
