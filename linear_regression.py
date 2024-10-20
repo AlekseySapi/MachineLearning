@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor       # Попробуем применить Дерево решений
 from sklearn.metrics import mean_squared_error
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -27,22 +28,33 @@ y = df['Price']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
-# Создаем и обучаем модель
-model = LinearRegression()
+# Создаем и обучаем модель дерева решений
+model = DecisionTreeRegressor()
 model.fit(X_train, y_train)
 
 # Делаем предсказание на тестовой выборке
 y_pred = model.predict(X_test)
 
+'''
 # Выводим коэффициенты
 print(f"Коэффициент наклона: {model.coef_[0]}")
 print(f"Смещение (bias): {model.intercept_}")
+'''
 
 # Оценим модель по метрике MSE (Mean Squared Error)
 mse = mean_squared_error(y_test, y_pred)
 print(f"Среднеквадратичная ошибка: {mse}")
 
 
+# Визуализация предсказанных и фактических значений
+plt.scatter(y_test, y_pred, color='purple')
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color='red', lw=2)
+plt.xlabel('Actual Price')
+plt.ylabel('Predicted Price')
+plt.title('Actual vs Predicted Price (Decision Tree)')
+plt.show()
+
+'''
 # Создаём 3D-график
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -69,3 +81,4 @@ plt.xlabel('Actual Price')
 plt.ylabel('Predicted Price')
 plt.title('Actual vs Predicted Price')
 plt.show()
+'''
