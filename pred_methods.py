@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor       # Попробуем применить Дерево решений
 from sklearn.ensemble import RandomForestRegressor      # Применим Случайный лес
 from sklearn.metrics import mean_squared_error
-from mpl_toolkits.mplot3d import Axes3D
+from sklearn.model_selection import cross_val_score
 
 
 # Генерируем примерные данные с площадями и ценами
@@ -45,15 +45,13 @@ model_rf.fit(X_train, y_train)
 # Делаем предсказание на тестовой выборке
 y_pred_rf = model_rf.predict(X_test)
 
-'''
-# Выводим коэффициенты
-print(f"Коэффициент наклона: {model.coef_[0]}")
-print(f"Смещение (bias): {model.intercept_}")
-'''
 
-# Оценим модель по метрике MSE (Mean Squared Error)
-mse_rf = mean_squared_error(y_test, y_pred_rf)
-print(f"Среднеквадратичная ошибка (Random Forest): {mse_rf}")
+# Применение кросс-валидации на модели случайного леса
+scores = cross_val_score(model_rf, X, y, cv=5, scoring='neg_mean_squared_error')     # 5 фолдов (5-10)
+
+# Средняя ошибка
+mean_mse = -scores.mean()
+print(f'Средняя квадратичная ошибка (с кросс-валидацией): {mean_mse}')
 
 
 # Визуализация зависимости цены от площади
