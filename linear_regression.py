@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+from mpl_toolkits.mplot3d import Axes3D
+
 
 # Генерируем примерные данные с площадями и ценами
 data = {
@@ -41,18 +43,29 @@ mse = mean_squared_error(y_test, y_pred)
 print(f"Среднеквадратичная ошибка: {mse}")
 
 
-# Визуализация зависимости цены от площади
-plt.scatter(X['Area'], y, color='blue')
-plt.plot(X, model.predict(X), color='red')
-plt.xlabel('Area')
-plt.ylabel('Price')
-plt.title('Area vs Price')
+# Создаём 3D-график
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Наносим данные
+ax.scatter(X['Area'], X['Rooms'], y, color='red')
+
+# Подписи осей
+ax.set_xlabel('Area')
+ax.set_ylabel('Rooms')
+ax.set_zlabel('Price')
+
+plt.title('Area, Rooms vs Price')
 plt.show()
 
-# Визуализация зависимости цены от количества комнат
-plt.scatter(X['Rooms'], y, color='green')
-plt.plot(X, model.predict(X), color='red')
-plt.xlabel('Rooms')
-plt.ylabel('Price')
-plt.title('Rooms vs Price')
+
+# Предсказания модели
+y_pred = model.predict(X_test)
+
+# Визуализация предсказанных и реальных цен
+plt.scatter(y_test, y_pred, color='purple')
+
+plt.xlabel('Actual Price')
+plt.ylabel('Predicted Price')
+plt.title('Actual vs Predicted Price')
 plt.show()
