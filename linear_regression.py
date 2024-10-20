@@ -11,13 +11,14 @@ from sklearn.metrics import mean_squared_error
 # Генерируем примерные данные с площадями и ценами
 data = {
     'Area': [50, 60, 70, 80, 90, 100, 110, 120],
-    'Price': [3000, 3400, 4000, 4200, 4700, 5000, 5500, 6000]
+    'Rooms': [1, 1, 1, 1, 1, 2, 2, 2],
+    'Price': [3000, 3400, 4000, 4200, 4700, 5700, 6100, 6900]
 }
 
 df = pd.DataFrame(data)
 
 # Разделяем данные на входные (X) и выходные (y)
-X = df[['Area']]
+X = df[['Area', 'Rooms']]
 y = df['Price']
 
 # Делим данные на тренировочные и тестовые
@@ -39,10 +40,19 @@ print(f"Смещение (bias): {model.intercept_}")
 mse = mean_squared_error(y_test, y_pred)
 print(f"Среднеквадратичная ошибка: {mse}")
 
-# Визуализируем линейную регрессию
-plt.scatter(X, y, color='blue')
+
+# Визуализация зависимости цены от площади
+plt.scatter(X['Area'], y, color='blue')
 plt.plot(X, model.predict(X), color='red')
-plt.xlabel('Area (кв.м)')
-plt.ylabel('Price (тыс. $)')
-plt.title('Линейная регрессия: Зависимость цены от площади')
+plt.xlabel('Area')
+plt.ylabel('Price')
+plt.title('Area vs Price')
+plt.show()
+
+# Визуализация зависимости цены от количества комнат
+plt.scatter(X['Rooms'], y, color='green')
+plt.plot(X, model.predict(X), color='red')
+plt.xlabel('Rooms')
+plt.ylabel('Price')
+plt.title('Rooms vs Price')
 plt.show()
