@@ -35,3 +35,14 @@ y_pred = model.predict(X_test)
 print(f"Коэффициент наклона: {model.coef_[0]}")
 print(f"Смещение (bias): {model.intercept_}")
 
+# Оценим модель по метрике MSE (Mean Squared Error)
+mse = mean_squared_error(y_test, y_pred)
+print(f"Среднеквадратичная ошибка: {mse}")
+
+# Визуализируем линейную регрессию
+plt.scatter(X, y, color='blue')
+plt.plot(X, model.predict(X), color='red')
+plt.xlabel('Area (кв.м)')
+plt.ylabel('Price (тыс. $)')
+plt.title('Линейная регрессия: Зависимость цены от площади')
+plt.show()
