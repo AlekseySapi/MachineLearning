@@ -35,6 +35,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # Создаем и обучаем модель - Случайный лес
 model_rf = RandomForestRegressor(n_estimators=100, max_depth=10, random_state=42)
+# n_estimators (число деревьев в лесу) - 100-500
+# max_depth (максимальная глубина дерева) - 5-30
 # min_samples_split (минимальное количество образцов для разделения) - 2-10
 # min_samples_leaf (минимальное количество данных в листовом узле) - 1-5
 
