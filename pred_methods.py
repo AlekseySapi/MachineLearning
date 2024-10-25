@@ -75,14 +75,14 @@ mae = mean_absolute_error(y_test, y_pred)
 print("Mean Absolute Error:", mae)
 
 
-'''
-# Применение кросс-валидации на модели случайного леса
-scores = cross_val_score(model_rf, X, y, cv=5, scoring='neg_mean_squared_error')     # 5 фолдов (5-10)
+
+# Оценка с помощью кросс-валидации
+scores = cross_val_score(xgb_model, X, y, cv=5, scoring='neg_mean_squared_error')     # 5 фолдов (5-10)
 
 # Средняя ошибка
 mean_mse = -scores.mean()
 print(f'Средняя квадратичная ошибка (с кросс-валидацией): {mean_mse}')
-'''
+
 
 
 
