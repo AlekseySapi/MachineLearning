@@ -34,6 +34,10 @@ y = df['Price']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
+# Создаём модель Градиентного бустинга
+xgb_model = xgb.XGBRegressor(n_estimators=150, learning_rate=0.1, max_depth=3, random_state=42)
+
+
 # Используем Grid Search
 param_grid = {
     'n_estimators': [50, 90, 100, 120, 150],
@@ -41,17 +45,24 @@ param_grid = {
     'max_depth': [3, 4, 5, 6, 7]
 }
 
-grid_search = GridSearchCV(estimator=xgb.XGBRegressor(), param_grid=param_grid, cv=3, scoring='neg_mean_absolute_error')
+# Настройка Grid Search с кросс-валидацией (cv=5)
+grid_search = GridSearchCV(estimator=xgb_model, param_grid=param_grid, cv=5, n_jobs=-1, scoring='neg_mean_squared_error')
+
+# Обучаем модель с Grid Search
 grid_search.fit(X_train, y_train)
 
-print("Best Parameters:", grid_search.best_params_)
+
+# Находим лучшие параметры
+best_params = grid_search.best_params_
+
+print("Лучшие параметры:", best_params)
 
 
-# Создаём модель Градиентного бустинга
-xgb_model = xgb.XGBRegressor(n_estimators=150, learning_rate=0.1, max_depth=3, random_state=42)
+# Создаем модель XGBoost с лучшими параметрами
+best_xgb_model = xgb.XGBRegressor(**best_params)
 
 # Обучение модели
-xgb_model.fit(X_train, y_train)
+best_xgb_model.fit(X_train, y_train)
 
 '''
 # Создаем и обучаем модель - Случайный лес
@@ -66,7 +77,8 @@ model_rf.fit(X_train, y_train)
 
 
 # Делаем предсказание на тестовой выборке
-y_pred = xgb_model.predict(X_test)
+y_pred = best_xgb_model.predict(X_test)
+
 
 
 # Оценка модели
@@ -77,22 +89,23 @@ print("Mean Absolute Error:", mae)
 
 
 # Оценка с помощью кросс-валидации
-scores = cross_val_score(xgb_model, X, y, cv=5, scoring='neg_mean_squared_error')     # 5 фолдов (5-10)
+scores = cross_val_score(best_xgb_model, X, y, cv=5, scoring='neg_mean_squared_error')     # 5 фолдов (5-10)
 
 # Средняя ошибка
 mean_mse = -scores.mean()
 print(f'Средняя квадратичная ошибка (с кросс-валидацией): {mean_mse}')
 
 
+
 # Визуализация важности признаков
 import matplotlib.pyplot as plt
-xgb.plot_importance(xgb_model)
+xgb.plot_importance(best_xgb_model)
 plt.show()
 
 
 # Визуализация зависимости цены от площади
 plt.scatter(X['Area'], y, color='blue')
-plt.plot(X, xgb_model.predict(X), color='red')
+plt.plot(X, best_xgb_model.predict(X), color='red')
 plt.xlabel('Area')
 plt.ylabel('Price')
 plt.title('Area vs Price')
@@ -100,7 +113,7 @@ plt.show()
 
 # Визуализация зависимости цены от количества комнат
 plt.scatter(X['Rooms'], y, color='green')
-plt.plot(X, xgb_model.predict(X), color='red')
+plt.plot(X, best_xgb_model.predict(X), color='red')
 plt.xlabel('Rooms')
 plt.ylabel('Price')
 plt.title('Rooms vs Price')
