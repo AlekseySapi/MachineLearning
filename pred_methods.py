@@ -84,6 +84,10 @@ mean_mse = -scores.mean()
 print(f'Средняя квадратичная ошибка (с кросс-валидацией): {mean_mse}')
 
 
+# Визуализация важности признаков
+import matplotlib.pyplot as plt
+xgb.plot_importance(xgb_model)
+plt.show()
 
 
 # Визуализация зависимости цены от площади
