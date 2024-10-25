@@ -4,4 +4,5 @@
 
 ## Содержимое
 - numpy_intro.py: Изучение NumPy
-- linear_regression.py: Линейная регрессия
+- pred_methods.py: Модели предсказаний
+- task_cups_of_coffee.py: Задача о кофе и продуктивности
