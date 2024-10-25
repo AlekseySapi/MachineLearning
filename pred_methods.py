@@ -8,12 +8,13 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor       # Попробуем применить Дерево решений
 from sklearn.ensemble import RandomForestRegressor      # Применим Случайный лес
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
+import xgboost as xgb # type: ignore
+from sklearn.model_selection import train_test_split
 
 
 # Генерируем примерные данные с площадями и ценами
@@ -33,6 +34,13 @@ y = df['Price']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
+# Создаём модель Градиентного бустинга
+xgb_model = xgb.XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=5, random_state=42)
+
+# Обучение модели
+xgb_model.fit(X_train, y_train)
+
+'''
 # Создаем и обучаем модель - Случайный лес
 model_rf = RandomForestRegressor(n_estimators=120, max_depth=3, min_samples_split=2, min_samples_leaf=1, random_state=42)
 # n_estimators (число деревьев в лесу) - 100-500
@@ -41,22 +49,33 @@ model_rf = RandomForestRegressor(n_estimators=120, max_depth=3, min_samples_spli
 # min_samples_leaf (минимальное количество данных в листовом узле) - 1-5
 
 model_rf.fit(X_train, y_train)
+'''
+
 
 # Делаем предсказание на тестовой выборке
-y_pred_rf = model_rf.predict(X_test)
+y_pred = xgb_model.predict(X_test)
 
 
+# Оценка модели
+from sklearn.metrics import mean_absolute_error
+mae = mean_absolute_error(y_test, y_pred)
+print("Mean Absolute Error:", mae)
+
+
+'''
 # Применение кросс-валидации на модели случайного леса
 scores = cross_val_score(model_rf, X, y, cv=5, scoring='neg_mean_squared_error')     # 5 фолдов (5-10)
 
 # Средняя ошибка
 mean_mse = -scores.mean()
 print(f'Средняя квадратичная ошибка (с кросс-валидацией): {mean_mse}')
+'''
+
 
 
 # Визуализация зависимости цены от площади
 plt.scatter(X['Area'], y, color='blue')
-plt.plot(X, model_rf.predict(X), color='red')
+plt.plot(X, xgb_model.predict(X), color='red')
 plt.xlabel('Area')
 plt.ylabel('Price')
 plt.title('Area vs Price')
@@ -64,7 +83,7 @@ plt.show()
 
 # Визуализация зависимости цены от количества комнат
 plt.scatter(X['Rooms'], y, color='green')
-plt.plot(X, model_rf.predict(X), color='red')
+plt.plot(X, xgb_model.predict(X), color='red')
 plt.xlabel('Rooms')
 plt.ylabel('Price')
 plt.title('Rooms vs Price')
@@ -72,7 +91,7 @@ plt.show()
 
 
 # Визуализация предсказанных и фактических значений
-plt.scatter(y_test, y_pred_rf, color='green')
+plt.scatter(y_test, y_pred, color='green')
 plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color='red', lw=2)
 plt.xlabel('Actual Price')
 plt.ylabel('Predicted Price (Random Forest)')
