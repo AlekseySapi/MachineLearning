@@ -1,8 +1,7 @@
 # Изучаю Линейную регрессию и тд
 # y = w1x + w0
 # ...
-# Попробовал Дерево решений..
-# Теперь используем Случайный лес (Random Forest)
+# Попробовал Дерево решений и Случайный лес (Random Forest)
 
 
 import numpy as np
@@ -15,6 +14,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
 import xgboost as xgb # type: ignore
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV        # Выбор оптимальных параметров с помощью Grid Search
 
 
 # Генерируем примерные данные с площадями и ценами
@@ -34,8 +34,21 @@ y = df['Price']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
+# Используем Grid Search
+param_grid = {
+    'n_estimators': [50, 90, 100, 120, 150],
+    'learning_rate': [0.01, 0.05, 0.1, 0.15, 0.2],
+    'max_depth': [3, 4, 5, 6, 7]
+}
+
+grid_search = GridSearchCV(estimator=xgb.XGBRegressor(), param_grid=param_grid, cv=3, scoring='neg_mean_absolute_error')
+grid_search.fit(X_train, y_train)
+
+print("Best Parameters:", grid_search.best_params_)
+
+
 # Создаём модель Градиентного бустинга
-xgb_model = xgb.XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=5, random_state=42)
+xgb_model = xgb.XGBRegressor(n_estimators=150, learning_rate=0.1, max_depth=3, random_state=42)
 
 # Обучение модели
 xgb_model.fit(X_train, y_train)
