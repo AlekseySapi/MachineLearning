@@ -23,3 +23,12 @@ plt.xlabel('Day of the Week')
 plt.ylabel('Views')
 plt.grid(True)
 plt.show()
+
+
+# Гистограмма просмотров по дням недели
+plt.figure(figsize=(10, 6))
+plt.bar(df['Day'], df['Views'], color='c')
+plt.title('Distribution of Views by Day of the Week')
+plt.xlabel('Day of the Week')
+plt.ylabel('Views')
+plt.show()
