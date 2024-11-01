@@ -17,3 +17,8 @@ day_of_week = np.random.randint(1, 8, data_size)
 hour = np.random.randint(0, 24, data_size)
 temperature = np.random.normal(15, 10, data_size)  # Средняя температура около 15°C
 
+# Цель: искусственное потребление электроэнергии с учетом дня, часа и температуры
+consumption = (5 * day_of_week +
+               3 * hour +
+               0.5 * temperature +
+               np.random.normal(0, 3, data_size))  # добавляем шум для реалистичности
