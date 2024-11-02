@@ -22,3 +22,12 @@ consumption = (5 * day_of_week +
                3 * hour +
                0.5 * temperature +
                np.random.normal(0, 3, data_size))  # добавляем шум для реалистичности
+
+
+# Создаём DataFrame
+df = pd.DataFrame({
+    'day_of_week': day_of_week,
+    'hour': hour,
+    'temperature': temperature,
+    'consumption': consumption
+})
