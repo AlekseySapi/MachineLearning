@@ -36,3 +36,11 @@ df = pd.DataFrame({
 X = df[['day_of_week', 'hour', 'temperature']]
 y = df['consumption']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+# Обучаем модели
+rf_model = RandomForestRegressor(n_estimators=100, random_state=42)     # Случайный лес
+gb_model = GradientBoostingRegressor(n_estimators=100, random_state=42) # Градиентный бустинг
+
+rf_model.fit(X_train, y_train)
+gb_model.fit(X_train, y_train)
