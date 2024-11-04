@@ -6,6 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error
+import matplotlib.pyplot as plt
 
 
 # Генерация данных
@@ -55,3 +56,26 @@ gb_mae = mean_absolute_error(y_test, gb_predictions)
 
 print(f"Средняя абсолютная ошибка (MAE) модели Случайный лес: {rf_mae}")
 print(f"Средняя абсолютная ошибка (MAE) модели Градиентный бустинг: {gb_mae}")
+
+
+# Построение графиков предсказаний vs фактических значений
+plt.figure(figsize=(14, 6))
+
+# График для Случайного леса
+plt.subplot(1, 2, 1)
+plt.scatter(y_test, rf_predictions, alpha=0.5)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], '--', color='red')
+plt.title('Случайный лес: Фактические vs Предсказанные')
+plt.xlabel('Фактические значения')
+plt.ylabel('Предсказанные значения')
+
+# График для XGBoost
+plt.subplot(1, 2, 2)
+plt.scatter(y_test, gb_predictions, alpha=0.5)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], '--', color='red')
+plt.title('XGBoost: Фактические vs Предсказанные')
+plt.xlabel('Фактические значения')
+plt.ylabel('Предсказанные значения')
+
+plt.tight_layout()
+plt.show()
