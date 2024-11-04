@@ -44,3 +44,14 @@ gb_model = GradientBoostingRegressor(n_estimators=100, random_state=42) # Гра
 
 rf_model.fit(X_train, y_train)
 gb_model.fit(X_train, y_train)
+
+
+# Предсказание и оценка точности
+rf_predictions = rf_model.predict(X_test)
+gb_predictions = gb_model.predict(X_test)
+
+rf_mae = mean_absolute_error(y_test, rf_predictions)
+gb_mae = mean_absolute_error(y_test, gb_predictions)
+
+print(f"Средняя абсолютная ошибка (MAE) модели Случайный лес: {rf_mae}")
+print(f"Средняя абсолютная ошибка (MAE) модели Градиентный бустинг: {gb_mae}")
